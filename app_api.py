@@ -3,11 +3,11 @@ from flask_restful import Resource, Api
 import token
 import json
 
+
 app = Flask(__name__)
 api = Api(app)
 
-merchants = [
-]
+merchants = [[0,1], [0], [1]]
 
 products = [
     {
@@ -52,24 +52,15 @@ class Products(Resource):
 
 class Merchants(Resource):
     def get(self, id):
-        print("Merchant id: " + str(id))
-
-#lista todos os products e permite registar um novo product
-class ListaProducts(Resource):
-    def get(self):
-        return products
-
-    def post(self):
-        dados = json.loads(request.data)
-        posicao = len(products)
-        dados['id'] = posicao
-        products.append(dados)
-        return products[posicao]
+        prods = []
+        for prod in merchants[id]:
+            prods.append(products[prod])
+        return prods
         
 
 api.add_resource(Products, '/products/<int:id>/')
-api.add_resource(Merchants, '/merchants/<int:id>/')
-api.add_resource(ListaProducts, '/products/')
+api.add_resource(Merchants, '/api/v1/merchant/<int:id>/products/')
+#api.add_resource(ListaProducts, '/products/')
 
 if __name__ == '__main__':
     app.run(debug=True)
